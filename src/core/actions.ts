@@ -5,7 +5,7 @@ export const reduceActions = initializers =>
       {
         get(_, key) {
           if (typeof key === 'string' && key !== 'inspect') {
-            // FIXME: defaulting to a resolved promise as for now flows are not inspected
+            // FIXME: defaulting to a resolved promise as for now flows are not discovered
             actions[key] = jest.fn(() => Promise.resolve());
           }
         }
