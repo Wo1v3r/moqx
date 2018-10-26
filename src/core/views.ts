@@ -1,19 +1,15 @@
-export const reduceViews = initializers =>
-  initializers.reduce((views, initializer) => {
-    const extractView = new Proxy(
-      {},
-      {
-        get(_, key) {
-          if (typeof key === 'string' && key !== 'inspect') {
-            views = {
-              ...views,
-              [key]: key
-              // FIXME:  How the hell can this type be infered
-            };
-          }
-        }
-      }
-    );
-    initializer(extractView);
-    return views;
-  }, {});
+import { getMembers } from 'mobx-state-tree';
+import { mockPrimitive } from './mockers';
+
+export const extractViews = (model, props) => {
+  const instance = model.create(props);
+
+  return getMembers(instance)
+    .views.filter(view => view !== 'toJSON' && view !== '$treenode')
+    .reduce((views, view) => {
+      return {
+        ...views,
+        [view]: mockPrimitive[typeof instance[view]]()
+      };
+    }, {});
+};

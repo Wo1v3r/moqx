@@ -3,27 +3,18 @@ import {
   ModelInstanceType,
   ModelProperties
 } from 'mobx-state-tree';
-import { reduceActions, reducePrimitives, reduceViews } from './core';
+import { extractViews, reduceActions, reducePrimitives } from './core';
 
 export const mock = <P extends ModelProperties, O>(model: IModelType<P, O>) => {
   const mockProps = reducePrimitives(model.properties);
 
-  const [viewInitializers, actionInitializers] = model['initializers'].reduce(
-    ([views, actions], initializer) => [
-      [
-        ...views,
-        ...(initializer.name === 'viewInitializer' ? [initializer] : [])
-      ],
-      [
-        ...actions,
-        ...(initializer.name === 'actionInitializer' ? [initializer] : [])
-      ]
-    ],
-    [[], []]
+  const actionInitializers = model['initializers'].filter(
+    ({ name }) => name === 'actionInitializer'
   );
 
   const mockActions = reduceActions(actionInitializers);
-  const mockViews = reduceViews(viewInitializers);
+
+  const mockViews = extractViews(model, mockProps);
 
   return { ...mockProps, ...mockActions, ...mockViews } as ModelInstanceType<
     P,

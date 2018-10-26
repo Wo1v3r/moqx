@@ -3,14 +3,11 @@ import { mock } from '../src';
 
 const Views = types
   .model('Views', {
-    prop1: types.string
+    prop1: types.optional(types.string, '10')
   })
-  .actions(model => ({
-    stuff: () => 'stuff'
-  }))
   .views(model => ({
-    get string() {
-      return model.prop1;
+    get number() {
+      return parseInt(model.prop1, 10);
     }
   }));
 
@@ -19,6 +16,6 @@ describe('views', () => {
   beforeEach(() => (views = mock(Views)));
 
   it('mocks a view', () => {
-    expect(types.string.is(views.string)).toBe(true);
+    expect(typeof views.number).toEqual('number');
   });
 });
