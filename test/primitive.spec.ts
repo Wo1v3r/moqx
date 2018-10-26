@@ -1,6 +1,7 @@
 import { types } from 'mobx-state-tree';
 import { mock } from '../src';
 
+type IPrimitives = typeof Primitives.Type;
 const Primitives = types.model('Primitives', {
   boolean: types.boolean,
   integer: types.integer,
@@ -10,27 +11,19 @@ const Primitives = types.model('Primitives', {
 });
 
 describe('Primitives', () => {
-  let primitives: typeof Primitives.Type;
+  describe('types', () => {
+    const primitives: IPrimitives = mock(Primitives);
 
-  beforeEach(() => (primitives = mock(Primitives)));
-
-  test('it mocks a number', () => {
     expect(types.number.is(primitives.number)).toBe(true);
-  });
-
-  test('it mocks an integer', () => {
-    expect(types.integer.is(primitives.integer)).toBe(true);
-  });
-
-  test('it mocks a string', () => {
     expect(types.string.is(primitives.string)).toBe(true);
-  });
-
-  test('it mocks a null', () => {
+    expect(types.integer.is(primitives.integer)).toBe(true);
     expect(types.null.is(primitives.null)).toBe(true);
+    expect(types.boolean.is(primitives.boolean)).toBe(true);
   });
 
-  test('it mocks a boolean', () => {
-    expect(types.boolean.is(primitives.boolean)).toBe(true);
+  test('it patches', () => {
+    const primitives: IPrimitives = mock(Primitives, { number: 5 });
+
+    expect(primitives.number).toEqual(5);
   });
 });
