@@ -1,29 +1,25 @@
 import {
   IModelType,
   ModelInstanceType,
-  ModelProperties,
-  ModelSnapshotType
+  ModelProperties
 } from 'mobx-state-tree';
-import { extractViews, reduceActions, reducePrimitives } from './core';
+import { reduceActions, reduceProperties, reduceViews } from './core';
 
 export const mock = <P extends ModelProperties, O>(
   model: IModelType<P, O>,
-  patch: Partial<ModelSnapshotType<P>> = {}
+  // FIXME: types
+  patch = {}
 ) => {
-  const mockProps = reducePrimitives(model.properties);
-
   const actionInitializers = model['initializers'].filter(
     ({ name }) => name === 'actionInitializer'
   );
 
-  const mockActions = reduceActions(actionInitializers);
-
-  const mockViews = extractViews(model, mockProps);
+  const mockProps = reduceProperties(model.properties);
 
   return {
     ...mockProps,
-    ...mockActions,
-    ...mockViews,
+    ...reduceActions(actionInitializers),
+    ...reduceViews(model, mockProps),
     ...(patch as any)
   } as ModelInstanceType<P, O, any, any>;
 };

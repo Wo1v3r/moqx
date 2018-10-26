@@ -1,6 +1,12 @@
 import { mock } from '../../src';
 import { ITodo, Todo } from './models';
 
+const inspiringQuote =
+  '"Nothing is impossible, the word itself says “I\'m Possible”"';
+
+const intimidatingQuote =
+  '"When your life flashes before your eyes, make sure you’ve got plenty to watch."';
+
 class TodoItem {
   constructor(private todo: ITodo) {}
 
@@ -16,6 +22,10 @@ class TodoItem {
   public toggle() {
     return this.todo.toggle();
   }
+
+  get quoteOfTheDay() {
+    return this.todo.isSlacking ? intimidatingQuote : inspiringQuote;
+  }
 }
 
 describe('TodoItem', () => {
@@ -27,21 +37,39 @@ describe('TodoItem', () => {
     expect(todo.toggle).toHaveBeenCalled();
   });
 
-  it('returns already completed message', () => {
-    const todo = mock(Todo, { done: true });
-    const todoItem = new TodoItem(todo);
+  describe('patching properties', () => {
+    it('returns already completed message', () => {
+      const todo = mock(Todo, { done: true });
+      const todoItem = new TodoItem(todo);
 
-    expect(todoItem.completeIfNotDone()).toEqual(
-      `You've Already completed ${todo.name}`
-    );
+      expect(todoItem.completeIfNotDone()).toEqual(
+        `You've Already completed ${todo.name}`
+      );
+    });
+
+    it('returns completed message', () => {
+      const todo = mock(Todo, { done: false });
+      const todoItem = new TodoItem(todo);
+
+      expect(todoItem.completeIfNotDone()).toEqual(
+        `You've completed ${todo.name}`
+      );
+    });
   });
 
-  it('returns completed message', () => {
-    const todo = mock(Todo, { done: false });
-    const todoItem = new TodoItem(todo);
+  describe('patching views', () => {
+    it('returns an inspiring quote', () => {
+      const todo = mock(Todo, { isSlacking: false });
+      const todoItem = new TodoItem(todo);
 
-    expect(todoItem.completeIfNotDone()).toEqual(
-      `You've completed ${todo.name}`
-    );
+      expect(todoItem.quoteOfTheDay).toEqual(inspiringQuote);
+    });
+
+    it('returns an indimiating quote', () => {
+      const todo = mock(Todo, { isSlacking: true });
+      const todoItem = new TodoItem(todo);
+
+      expect(todoItem.quoteOfTheDay).toEqual(intimidatingQuote);
+    });
   });
 });

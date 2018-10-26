@@ -1,9 +1,10 @@
 import { types } from 'mobx-state-tree';
-import { mock } from '../src';
+import { mock } from '../../src';
 
 type IPrimitives = typeof Primitives.Type;
 const Primitives = types.model('Primitives', {
   boolean: types.boolean,
+  date: types.Date,
   integer: types.integer,
   null: types.null,
   number: types.number,
@@ -15,6 +16,7 @@ describe('Primitives', () => {
     const primitives: IPrimitives = mock(Primitives);
 
     expect(types.number.is(primitives.number)).toBe(true);
+    expect(types.Date.is(primitives.date)).toBe(true);
     expect(types.string.is(primitives.string)).toBe(true);
     expect(types.integer.is(primitives.integer)).toBe(true);
     expect(types.null.is(primitives.null)).toBe(true);

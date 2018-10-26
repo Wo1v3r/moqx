@@ -1,6 +1,6 @@
 import { getMembers } from 'mobx-state-tree';
 
-export const extractViews = (model, props) => {
+export const reduceViews = (model, props) => {
   const instance = model.create(props);
 
   return getMembers(instance)
