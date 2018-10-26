@@ -1,4 +1,4 @@
-import { types } from 'mobx-state-tree';
+import { getEnv, types } from 'mobx-state-tree';
 import { mock } from '../src';
 
 const Views = types
@@ -19,32 +19,42 @@ const Views = types
     get object() {
       return { number: model._number, string: model._string };
     },
-    get array() {
-      return [];
+    get envValue() {
+      return (getEnv(model).value || (_ => _))(model._string);
     }
   }));
 
 describe('views', () => {
-  let views: typeof Views.Type;
-  beforeEach(() => (views = mock(Views)));
+  it('mocks via properties', () => {
+    const views: typeof Views.Type = mock(Views);
 
-  it('mocks a number view', () => {
     expect(typeof views.number).toEqual('number');
-  });
-
-  it('mocks a string view', () => {
     expect(typeof views.string).toEqual('string');
-  });
-
-  it('mocks a boolean view', () => {
     expect(typeof views.boolean).toEqual('boolean');
-  });
-
-  it('mocks an object view', () => {
     expect(typeof views.object).toEqual('object');
   });
 
-  it('mocks an array view', () => {
-    expect(Array.isArray(views.array)).toBe(true);
+  it('mocks via environment', () => {
+    const value = (key: string) => `ENV ${key}`;
+
+    const views: typeof Views.Type = mock(Views, {}, { value });
+
+    expect(views.envValue).toEqual(`ENV ${views._string}`);
+  });
+
+  it('patches views', () => {
+    const patch = {
+      boolean: false,
+      number: 5,
+      object: { othervalue: 5 },
+      string: '1'
+    };
+
+    const views: typeof Views.Type = mock(Views, patch);
+
+    expect(views.boolean).toEqual(patch.boolean);
+    expect(views.number).toEqual(patch.number);
+    expect(views.object).toEqual(patch.object);
+    expect(views.string).toEqual(patch.string);
   });
 });
