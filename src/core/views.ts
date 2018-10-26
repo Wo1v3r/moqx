@@ -1,6 +1,6 @@
 export const reduceViews = initializers =>
   initializers.reduce((views, initializer) => {
-    const extractAction = new Proxy(
+    const extractView = new Proxy(
       {},
       {
         get(_, key) {
