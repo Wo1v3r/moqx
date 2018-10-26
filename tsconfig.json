@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "sourceMap": true,
     "declaration": true,
     "module": "es2015",
@@ -8,7 +10,6 @@
     "outDir": "lib/",
     "noImplicitAny": false,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": true,
