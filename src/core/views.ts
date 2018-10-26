@@ -14,6 +14,6 @@ export const reduceViews = initializers =>
         }
       }
     );
-    initializer(extractAction);
+    initializer(extractView);
     return views;
   }, {});
