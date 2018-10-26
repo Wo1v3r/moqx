@@ -18,9 +18,9 @@ export const Todo = types
     toggle: () => (todo.done = !todo.done)
   }))
   .views(todo => ({
-    // get title() {
-    //   return `[${todo.category}] ${todo.name}`;
-    // },
+    get title() {
+      return `[${todo.category}] ${todo.name}`;
+    },
     get isSlacking() {
       return !todo.done && todo.dueDate.getTime() < new Date().getTime();
     }

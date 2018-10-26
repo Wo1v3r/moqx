@@ -19,7 +19,7 @@ export const mock = <P extends ModelProperties, O>(
   return {
     ...mockProps,
     ...reduceActions(actionInitializers),
-    ...reduceViews(model, mockProps),
+    ...reduceViews(model, { ...mockProps, ...patch }),
     ...(patch as any)
   } as ModelInstanceType<P, O, any, any>;
 };

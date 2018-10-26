@@ -26,6 +26,10 @@ class TodoItem {
   get quoteOfTheDay() {
     return this.todo.isSlacking ? intimidatingQuote : inspiringQuote;
   }
+
+  get display() {
+    return this.todo.title;
+  }
 }
 
 describe('TodoItem', () => {
@@ -70,6 +74,16 @@ describe('TodoItem', () => {
       const todoItem = new TodoItem(todo);
 
       expect(todoItem.quoteOfTheDay).toEqual(intimidatingQuote);
+    });
+  });
+
+  // FIXME: might not need this "feature"
+  describe('patching properties to views', () => {
+    it('returns formatted title', () => {
+      const todo = mock(Todo, { category: 'Hobbies', name: 'Find one' });
+      const todoItem = new TodoItem(todo);
+
+      expect(todoItem.display).toEqual(`[Hobbies] Find one`);
     });
   });
 });
